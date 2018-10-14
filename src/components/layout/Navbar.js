@@ -8,7 +8,7 @@ const Navbar = () => {
     <nav className="nav-wrapper grey darken-3">
       <div className="container">
         <Link to="/" className="brand-logo left">
-          MarioPlan
+          ToDo List
         </Link>
         <SignedInLines />
         <SignedOutLinks />
