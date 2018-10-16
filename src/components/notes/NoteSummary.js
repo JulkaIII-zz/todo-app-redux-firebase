@@ -5,7 +5,9 @@ const NoteSummary = ({ note }) => {
     <div className="card z-depth-0 note-summary">
       <div className="card-content grey-text text-darken-3">
         <span className="card-title">{note.title}</span>
-        <p>Posted by Julka</p>
+        <p>
+          Posted by {note.authorFirstName} {note.authorLastName}
+        </p>
         <p className="grey-text">3rd september</p>
       </div>
     </div>

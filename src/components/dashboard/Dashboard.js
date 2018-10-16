@@ -16,7 +16,7 @@ class Dashboard extends Component {
       <div className="dashboard container">
         <div className="row">
           <div className="col s12 m6">
-            <NotesList notes={notes} />{" "}
+            <NotesList notes={notes} />
             {/* pass notes down as a prop to NoteList component */}
           </div>
           <div className="col s12 m5 offset-m1">

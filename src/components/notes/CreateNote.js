@@ -18,6 +18,7 @@ class CreateNote extends Component {
     e.preventDefault(); // prevents the page for reloading
     //console.log(this.state);
     this.props.createNote(this.state); // from here goes to mapDispatchToProps
+    this.props.history.push("/"); //redirect to dashboard
   };
 
   render() {
