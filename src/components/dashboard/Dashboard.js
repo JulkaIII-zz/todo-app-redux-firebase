@@ -2,11 +2,16 @@ import React, { Component } from "react";
 import NotesList from "../notes/NotesList";
 import Notifications from "./Notifications";
 import { connect } from "react-redux";
+import { firestoreConnect } from "react-redux-firebase";
+import { compose } from "redux";
+import { Redirect } from "react-router-dom";
 
 class Dashboard extends Component {
   render() {
     //console.log(this.props);
-    const { notes } = this.props;
+    const { notes, auth } = this.props;
+    if (!auth.uid) return <Redirect to="/signin" />;
+
     return (
       <div className="dashboard container">
         <div className="row">
@@ -24,10 +29,15 @@ class Dashboard extends Component {
 }
 
 const mapStateToProps = state => {
+  console.log(state);
   return {
-    notes: state.note.notes // note-from rootReducer, which has notes in noteReducer
+    notes: state.firestore.ordered.notes,
+    auth: state.firebase.auth
   };
 };
 // now we have notes propery inside the props of this component
 
-export default connect(mapStateToProps)(Dashboard);
+export default compose(
+  connect(mapStateToProps),
+  firestoreConnect([{ collection: "notes" }])
+)(Dashboard);

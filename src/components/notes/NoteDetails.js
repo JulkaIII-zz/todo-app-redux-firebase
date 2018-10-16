@@ -1,27 +1,45 @@
 import React from "react";
+import { connect } from "react-redux";
+import { firestoreConnect } from "react-redux-firebase";
+import { compose } from "redux";
+import { Redirect } from "react-router-dom";
 
 const NoteDetails = props => {
-  const id = props.match.params.id;
-  console.log(props);
-  return (
-    <div className="container section note-details">
-      <div className="card z-depth-0">
-        <div className="card-content">
-          <span className="card-title">Note Title - {id}</span>
-          <p>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sit magni
-            mollitia impedit quis, voluptatibus doloribus exercitationem,
-            perspiciatis quibusdam ratione non praesentium, porro quisquam
-            recusandae blanditiis tenetur? Autem reprehenderit temporibus
-            molestias!
-          </p>
-        </div>
-        <div className="card-action grey lighten-4 grey-text">
-          <div>Posted by Julka</div>
-          <div>2nd eptember, 2am</div>
+  const { note, auth } = props;
+  if (!auth.uid) return <Redirect to="/signin" />;
+  if (note) {
+    return (
+      <div className="container section note-details">
+        <div className="card z-depth-0">
+          <div className="card-content">
+            <span className="card-title">Note Title - {note.title}</span>
+            <p>{note.content}</p>
+          </div>
+          <div className="card-action grey lighten-4 grey-text">
+            <div>
+              Posted by {note.authorFirstName} {note.authorLastName}
+            </div>
+            <div>2nd eptember, 2am</div>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  } else {
+    return <div className="container center">Loading note...</div>;
+  }
 };
-export default NoteDetails;
+
+const mapStateToProps = (state, ownProps) => {
+  const id = ownProps.match.params.id;
+  const notes = state.firestore.data.notes;
+  const note = notes ? notes[id] : null;
+  return {
+    note: note,
+    auth: state.firebase.auth
+  };
+};
+
+export default compose(
+  connect(mapStateToProps),
+  firestoreConnect([{ collection: "notes" }])
+)(NoteDetails);
