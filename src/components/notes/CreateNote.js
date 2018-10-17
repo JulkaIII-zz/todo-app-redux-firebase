@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { createNote } from "../../store/actions/noteActions";
+import { Redirect } from "react-router-dom";
 
 class CreateNote extends Component {
   state = {
@@ -17,9 +18,13 @@ class CreateNote extends Component {
     e.preventDefault(); // prevents the page for reloading
     //console.log(this.state);
     this.props.createNote(this.state); // from here goes to mapDispatchToProps
+    this.props.history.push("/"); //redirect to dashboard
   };
 
   render() {
+    const { auth } = this.props;
+    if (!auth.uid) return <Redirect to="/signin" />;
+
     return (
       <div className="container">
         <form onSubmit={this.handeSubmit}>
@@ -45,6 +50,12 @@ class CreateNote extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    auth: state.firebase.auth
+  };
+};
+
 const mapDispatchToProps = dispatch => {
   return {
     createNote: note => dispatch(createNote(note))
@@ -52,6 +63,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
-)(CreateNote); // null - mapStateToProps
+)(CreateNote);
